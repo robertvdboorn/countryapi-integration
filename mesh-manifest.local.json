@@ -1,0 +1,24 @@
+{
+  "type": "country-api",
+  "displayName": "Country API",
+  "logoIconUrl": "https://i.imgur.com/WZIRJnh.png",
+  "badgeIconUrl": "https://i.imgur.com/Px9N24U.png",
+  "category": "content",
+  "baseLocationUrl": "http://localhost:4064",
+  "locations": {
+    "dataConnectors": [
+      {
+        "type": "country-data-connection",
+        "displayName": "Country API",
+        "dataSourceEditorUrl": "/data-connection-editor",
+        "dataArchetypes": {
+          "singleCountry": {
+            "displayName": "Single Country",
+            "typeEditorUrl": "/data-types/single-country-type-editor",
+            "dataEditorUrl": "/data-types/single-country-data-editor"
+          }
+        }
+      }
+    ]
+  }
+}
