@@ -92,6 +92,7 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
                   alt={country.name}
                   width={75}
                   height={75}
+                  loading="lazy"
                   style={{ marginRight: "10px", borderRadius: "4px" }}
                 />
               )}
