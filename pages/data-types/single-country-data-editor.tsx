@@ -25,14 +25,14 @@ const DataEditorInner: React.FC = () => {
     const data = await response.json();
 
     // Map country data to include all necessary fields
-    return data.map((country: any, index: number) => {
-      return {
+    return data
+      .map((country: any, index: number) => ({
         id: index + 1,
         name: country.name.common,
         image: getValueFromPath(country, imagePath),
         officialName: country.name.official,
-      };
-    });
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name));
   }, []);
 
   if (loadingCountries) {
