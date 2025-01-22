@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { VerticalRhythm, Input } from "@uniformdev/design-system";
+import { debounce } from "lodash";
 
 interface Country {
   id: number;
@@ -27,21 +28,35 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
     setFilteredCountryList(countryList);
   }, [countryList]);
 
-  useEffect(() => {
-    if (searchQuery.trim() !== "") {
-      setFilteredCountryList(
-        countryList.filter((country) =>
-          country.name.toLowerCase().includes(searchQuery.toLowerCase())
-        )
-      );
-    } else {
-      setFilteredCountryList(countryList);
-    }
-  }, [searchQuery, countryList]);
+  const handleSearch = debounce(
+    (query: string) => {
+      setSearchQuery(query);
 
-  const handleSearch = (query: string) => {
-    setSearchQuery(query);
-  };
+      if (searchQuery.trim() !== "") {
+        setFilteredCountryList(
+          countryList
+            .filter((country) =>
+              country.name.toLowerCase().includes(searchQuery.toLowerCase())
+            )
+            .sort((a, b) => {
+              // Prioritize names starting with the query
+              const startsWithA = a.name
+                .toLowerCase()
+                .startsWith(searchQuery.toLowerCase());
+              const startsWithB = b.name
+                .toLowerCase()
+                .startsWith(searchQuery.toLowerCase());
+              if (startsWithA && !startsWithB) return -1; // a comes first
+              if (!startsWithA && startsWithB) return 1; // b comes first
+              return a.name.localeCompare(b.name); // Otherwise, sort alphabetically
+            })
+        );
+      } else {
+        setFilteredCountryList(countryList);
+      }
+    },
+    [searchQuery, countryList]
+  );
 
   const handleSelection = (country: Country) => {
     onSelect(country);
@@ -97,7 +112,9 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
                 />
               )}
               <div style={{ flex: 1 }}>
-                <span style={{ fontWeight: "bold" }}>{country.name}</span>
+                <span style={{ fontWeight: "bold" }}>
+                  {highlightQuery(country.name, searchQuery)}
+                </span>
                 <div
                   style={{
                     fontSize: "0.85em",
@@ -119,6 +136,24 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
         )}
       </div>
     </VerticalRhythm>
+  );
+};
+
+const highlightQuery = (name: string, query: string): React.ReactNode => {
+  if (!query) return name;
+  const parts = name.split(new RegExp(`(${query})`, "gi"));
+  return (
+    <>
+      {parts.map((part, index) =>
+        part.toLowerCase() === query.toLowerCase() ? (
+          <span key={index} style={{ color: "#007BFF", fontWeight: "bold" }}>
+            {part}
+          </span>
+        ) : (
+          part
+        )
+      )}
+    </>
   );
 };
 

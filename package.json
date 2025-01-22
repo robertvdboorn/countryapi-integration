@@ -16,6 +16,8 @@
     "@uniformdev/canvas": "19.207.0",
     "@uniformdev/design-system": "19.207.0",
     "@uniformdev/mesh-sdk-react": "19.207.0",
+    "debounce": "^2.2.0",
+    "lodash": "^4.17.21",
     "next": "13.5.6",
     "react": "18.2.0",
     "react-dom": "18.2.0",
